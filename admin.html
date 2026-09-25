@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - WhatsApp Automation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 0;
+        }
+        
+        /* Navbar */
+        .navbar {
+            background: rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .navbar-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: white;
+            font-size: 22px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+        
+        .logo-icon {
+            font-size: 28px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .logout {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+        
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .header {
+            color: white;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+        
+        .header p {
+            font-size: 18px;
+            opacity: 0.95;
+        }
+        
+        /* Main Grid */
+        .admin-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            margin-bottom: 40px;
+        }
+        
+        /* Card */
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 36px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            animation: slideUp 0.6s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .card h2 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 24px;
+            font-weight: 700;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 16px;
+        }
+        
+        /* Add User Form */
+        .form-group {
+            margin-bottom: 18px;
+        }
+        
+        label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #e8e8e8;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+            background: #f9f9f9;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        /* Users List */
+        .users-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .users-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .users-list::-webkit-scrollbar-track {
+            background: #f0f0f0;
+            border-radius: 10px;
+        }
+        
+        .users-list::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+        
+        .user-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        
+        .user-item:hover {
+            background: #f0f0f0;
+            transform: translateX(4px);
+        }
+        
+        .user-info {
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .user-badges {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .user-status {
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            display: inline-block;
+            font-weight: 500;
+        }
+        
+        .status-approved {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-admin {
+            background: #ffc107;
+            color: #333;
+            font-weight: 700;
+        }
+        
+        .user-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn-small {
+            padding: 8px 12px;
+            font-size: 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        
+        .btn-toggle {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-toggle:hover {
+            background: #5568d3;
+            transform: scale(1.05);
+        }
+        
+        .btn-delete {
+            background: #ff5252;
+            color: white;
+        }
+        
+        .btn-delete:hover {
+            background: #ff3838;
+            transform: scale(1.05);
+        }
+        
+        .btn-admin {
+            background: #ffc107;
+            color: #333;
+        }
+        
+        .btn-admin:hover {
+            background: #ffb300;
+            transform: scale(1.05);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: #999;
+        }
+        
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .admin-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            
+            .card {
+                padding: 28px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .navbar-content {
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            .container {
+                padding: 24px 16px;
+            }
+            
+            .header h1 {
+                font-size: 32px;
+            }
+            
+            .header p {
+                font-size: 15px;
+            }
+            
+            .card {
+                padding: 24px;
+            }
+            
+            .card h2 {
+                font-size: 20px;
+            }
+            
+            .user-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            
+            .user-actions {
+                width: 100%;
+            }
+            
+            .btn-small {
+                flex: 1;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .navbar-content {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            
+            .logo {
+                font-size: 18px;
+            }
+            
+            .container {
+                padding: 20px 12px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .header p {
+                font-size: 13px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .card h2 {
+                font-size: 18px;
+            }
+            
+            .form-group {
+                margin-bottom: 14px;
+            }
+            
+            label {
+                font-size: 13px;
+            }
+            
+            input {
+                padding: 11px 12px;
+                font-size: 13px;
+            }
+            
+            .btn {
+                padding: 11px;
+                font-size: 13px;
+            }
+            
+            .user-item {
+                padding: 12px;
+            }
+            
+            .user-name {
+                font-size: 14px;
+            }
+            
+            .user-status {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a href="#" class="logo">
+                <span class="logo-icon">⚙️</span>
+                <span>Admin Panel</span>
+            </a>
+            <div class="nav-links">
+                <a href="/dashboard">Dashboard</a>
+                <a href="/" class="logout">Logout</a>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <div class="container">
+        <div class="header">
+            <h1>Admin Control Panel</h1>
+            <p>Manage users and control account approvals</p>
+        </div>
+        
+        <div class="admin-grid">
+            <!-- Add User Card -->
+            <div class="card">
+                <h2>➕ Add New User</h2>
+                <form id="addUserForm">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" placeholder="e.g., john_doe" required>
+                    </div>
+                    <button type="submit" class="btn">Add User</button>
+                </form>
+            </div>
+            
+            <!-- Users List Card -->
+            <div class="card">
+                <h2>👥 All Users</h2>
+                <div class="users-list" id="usersList">
+                    <div class="empty-state">
+                        <div class="empty-icon">📭</div>
+                        Loading users...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Load users
+        async function loadUsers() {
+            try {
+                const response = await fetch('/api/admin/users');
+                const data = await response.json();
+                displayUsers(data.users);
+            } catch (error) {
+                console.error('Error loading users:', error);
+                document.getElementById('usersList').innerHTML = '<div class="empty-state"><div class="empty-icon">❌</div>Error loading users</div>';
+            }
+        }
+        
+        // Display users
+        function displayUsers(users) {
+            const usersList = document.getElementById('usersList');
+            if (!users || users.length === 0) {
+                usersList.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div>No users found</div>';
+                return;
+            }
+            
+            usersList.innerHTML = users.map(user => `
+                <div class="user-item">
+                    <div class="user-info">
+                        <div class="user-name">${user.username}</div>
+                        <div class="user-badges">
+                            <span class="user-status ${user.approved ? 'status-approved' : 'status-pending'}">
+                                ${user.approved ? '✓ Approved' : '⊘ Pending'}
+                            </span>
+                            ${user.admin ? '<span class="user-status status-admin">👑 Admin</span>' : ''}
+                        </div>
+                    </div>
+                    <div class="user-actions">
+                        <button class="btn-small btn-toggle" onclick="toggleApproval('${user.username}')">
+                            ${user.approved ? 'Disable' : 'Approve'}
+                        </button>
+                        <button class="btn-small btn-admin" onclick="toggleAdmin('${user.username}')">
+                            ${user.admin ? 'Remove Admin' : 'Make Admin'}
+                        </button>
+                        <button class="btn-small btn-delete" onclick="deleteUser('${user.username}')">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Add user
+        document.getElementById('addUserForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            
+            try {
+                const response = await fetch('/api/admin/add-user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username })
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('username').value = '';
+                    loadUsers();
+                    alert('User added successfully!');
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (error) {
+                alert('Error adding user');
+            }
+        });
+        
+        // Delete user
+        async function deleteUser(username) {
+            if (!confirm(`Are you sure you want to delete user "${username}"?`)) return;
+            
+            try {
+                const response = await fetch('/api/admin/delete-user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username })
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    loadUsers();
+                    alert('User deleted successfully!');
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (error) {
+                alert('Error deleting user');
+            }
+        }
+        
+        // Toggle approval
+        async function toggleApproval(username) {
+            try {
+                const response = await fetch('/api/admin/toggle-approval', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username })
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    loadUsers();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (error) {
+                alert('Error toggling approval');
+            }
+        }
+        
+        // Toggle admin
+        async function toggleAdmin(username) {
+            try {
+                const response = await fetch('/api/admin/toggle-admin', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username })
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    loadUsers();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (error) {
+                alert('Error toggling admin status');
+            }
+        }
+        
+        // Load users on page load
+        loadUsers();
+    </script>
+</body>
+</html>

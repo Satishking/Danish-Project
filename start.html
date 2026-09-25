@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Start Process - WhatsApp Automation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 30px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            top: -100px;
+            right: -100px;
+            animation: float 8s ease-in-out infinite;
+            z-index: 0;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(30px); }
+        }
+        
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            animation: slideUp 0.6s ease-out;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .card::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .card::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .card::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+        
+        .header p {
+            font-size: 15px;
+            opacity: 0.95;
+            font-weight: 400;
+        }
+        
+        .form-container {
+            padding: 40px 30px;
+        }
+        
+        .section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f0f0f0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .form-group {
+            margin-bottom: 24px;
+        }
+        
+        label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e8e8e8;
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+            background: #f9f9f9;
+        }
+        
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        input::placeholder {
+            color: #bbb;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .checkbox-group:hover {
+            background: #f5f5f5;
+        }
+        
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+        
+        .checkbox-label {
+            margin: 0;
+            font-weight: 500;
+            cursor: pointer;
+            color: #333;
+        }
+        
+        .help-text {
+            font-size: 12px;
+            color: #999;
+            margin-top: 8px;
+            font-weight: 400;
+        }
+        
+        .file-input-wrapper {
+            position: relative;
+            display: block;
+            width: 100%;
+        }
+        
+        .file-input-label {
+            display: block;
+            padding: 20px;
+            background: linear-gradient(135deg, #f9f9f9 0%, #f5f5f5 100%);
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+            color: #667eea;
+        }
+        
+        .file-input-label:hover {
+            background: linear-gradient(135deg, #f5f5f5 0%, #f0f0f0 100%);
+            border-color: #764ba2;
+            color: #764ba2;
+            transform: translateY(-2px);
+        }
+        
+        input[type="file"] {
+            display: none;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 14px;
+            margin-top: 32px;
+            margin-bottom: 0;
+        }
+        
+        .status-message {
+            padding: 16px;
+            border-radius: 10px;
+            margin-top: 16px;
+            display: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .status-message.success {
+            background: #d4edda;
+            color: #155724;
+            display: block;
+        }
+        
+        .status-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+        
+        button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-submit::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: left 0.4s ease;
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-submit:hover::before {
+            left: 100%;
+        }
+        
+        .btn-cancel {
+            background: #f0f0f0;
+            color: #333;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .btn-cancel:hover {
+            background: #e8e8e8;
+            border-color: #d0d0d0;
+            transform: translateY(-3px);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 0 auto;
+            }
+            
+            .header {
+                padding: 32px 24px;
+            }
+            
+            .header h1 {
+                font-size: 28px;
+            }
+            
+            .form-container {
+                padding: 32px 24px;
+                max-height: none;
+            }
+            
+            .form-group {
+                margin-bottom: 20px;
+            }
+            
+            .button-group {
+                gap: 12px;
+            }
+            
+            button {
+                padding: 13px;
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header {
+                padding: 28px 20px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+                margin-bottom: 6px;
+            }
+            
+            .header p {
+                font-size: 13px;
+            }
+            
+            .form-container {
+                padding: 28px 20px;
+            }
+            
+            .section-title {
+                font-size: 13px;
+                margin-bottom: 16px;
+            }
+            
+            .form-group {
+                margin-bottom: 18px;
+            }
+            
+            label {
+                font-size: 13px;
+                margin-bottom: 8px;
+            }
+            
+            input[type="text"],
+            input[type="number"] {
+                padding: 12px 14px;
+                font-size: 14px;
+            }
+            
+            .file-input-label {
+                padding: 16px;
+                font-size: 13px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 28px;
+            }
+            
+            button {
+                padding: 13px;
+                font-size: 13px;
+                letter-spacing: 0.3px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="header">
+                <h1>🚀 Start New Process</h1>
+                <p>Configure and launch a new automation process</p>
+            </div>
+            
+            <form method="POST" enctype="multipart/form-data" class="form-container" id="startForm">
+                <div class="section-title">📱 Target Information</div>
+                
+                <div class="form-group">
+                    <label for="convo_id">Phone Number</label>
+                    <input type="text" id="convo_id" name="convo_id" placeholder="e.g., +91 98765 43210" required>
+                    <div class="help-text">The WhatsApp account to automate from</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="haterID">Target ID</label>
+                    <input type="text" id="haterID" name="haterID" placeholder="e.g., +91 98765 43210 or user ID" required>
+                    <div class="help-text">Who to send messages to (phone or ID)</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="hater_name">Target Name</label>
+                    <input type="text" id="hater_name" name="hater_name" placeholder="e.g., John Doe" required>
+                    <div class="help-text">Display name for reference in your dashboard</div>
+                </div>
+                
+                <div class="section-title">⚙️ Configuration</div>
+                
+                <div class="form-group">
+                    <label for="delay">Delay Between Messages</label>
+                    <input type="number" id="delay" name="delay" placeholder="60" min="1" required>
+                    <div class="help-text">Wait time in seconds between sending each message</div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="isGroup" name="isGroup" value="true">
+                        <label for="isGroup" class="checkbox-label">Send to Group</label>
+                    </div>
+                    <div class="help-text">Check this if the target is a group chat</div>
+                </div>
+                
+                <div class="section-title">📂 Upload Files</div>
+                
+                <div class="form-group">
+                    <label>Credentials File (.json)</label>
+                    <div class="file-input-wrapper">
+                        <label for="tokens" class="file-input-label">📄 Click to upload credentials</label>
+                        <input type="file" id="tokens" name="tokens" accept=".json" required>
+                    </div>
+                    <div class="help-text">WhatsApp session credentials (creds.json)</div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Messages File (.txt)</label>
+                    <div class="file-input-wrapper">
+                        <label for="messages" class="file-input-label">📄 Click to upload messages</label>
+                        <input type="file" id="messages" name="messages" accept=".txt" required>
+                    </div>
+                    <div class="help-text">Text file with messages to send (one message per line)</div>
+                </div>
+                
+                <div class="button-group">
+                    <button type="submit" class="btn-submit" id="submitBtn">Start Process</button>
+                    <button type="button" class="btn-cancel" onclick="window.history.back()">Cancel</button>
+                </div>
+                
+                <div id="statusMessage" class="status-message"></div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        const tokensInput = document.getElementById('tokens');
+        const messagesInput = document.getElementById('messages');
+        const tokensLabel = document.querySelector('label[for="tokens"]');
+        const messagesLabel = document.querySelector('label[for="messages"]');
+        const form = document.getElementById('startForm');
+        const statusDiv = document.getElementById('statusMessage');
+        const submitBtn = document.getElementById('submitBtn');
+        
+        // Update file labels when files are selected
+        tokensInput.addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                tokensLabel.innerHTML = '✅ ' + e.target.files[0].name;
+            } else {
+                tokensLabel.innerHTML = '📄 Click to upload credentials';
+            }
+        });
+        
+        messagesInput.addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                messagesLabel.innerHTML = '✅ ' + e.target.files[0].name;
+            } else {
+                messagesLabel.innerHTML = '📄 Click to upload messages';
+            }
+        });
+        
+        // Handle form submission with validation
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validate all required fields
+            const convoId = document.getElementById('convo_id').value.trim();
+            const haterID = document.getElementById('haterID').value.trim();
+            const haterName = document.getElementById('hater_name').value.trim();
+            const delay = document.getElementById('delay').value.trim();
+            
+            if (!convoId || !haterID || !haterName || !delay) {
+                showStatus('Please fill in all fields', 'error');
+                return;
+            }
+            
+            if (tokensInput.files.length === 0) {
+                showStatus('Please upload credentials file', 'error');
+                return;
+            }
+            
+            if (messagesInput.files.length === 0) {
+                showStatus('Please upload messages file', 'error');
+                return;
+            }
+            
+            // Submit the form
+            submitBtn.disabled = true;
+            submitBtn.textContent = '⏳ Starting...';
+            form.submit();
+        });
+        
+        function showStatus(message, type) {
+            statusDiv.textContent = message;
+            statusDiv.className = 'status-message ' + type;
+            setTimeout(() => {
+                statusDiv.className = 'status-message';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

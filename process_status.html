@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Process Status</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+        
+        .back-link:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateX(-5px);
+        }
+        
+        .refresh-btn {
+            float: right;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .refresh-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: rotate(180deg);
+        }
+        
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .process-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+        
+        .process-card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .process-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .process-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .process-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .info-item {
+            color: #666;
+            font-size: 0.9em;
+            word-break: break-word;
+        }
+        
+        .info-label {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .delete-btn, .monitor-btn {
+            padding: 8px 20px;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .delete-btn {
+            background: #dc3545;
+        }
+        
+        .monitor-btn {
+            background: #667eea;
+        }
+        
+        .delete-btn:hover, .monitor-btn:hover {
+            opacity: 0.8;
+            transform: translateY(-1px);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+        
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+        
+        .custom-confirm-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+        
+        .custom-confirm-overlay.show {
+            display: flex;
+        }
+        
+        .custom-confirm-box {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            max-width: 400px;
+            text-align: center;
+        }
+        
+        .custom-confirm-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 25px;
+        }
+        
+        .confirm-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .confirm-btn.yes {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .confirm-btn.no {
+            background: #6c757d;
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.8em; }
+            .process-header { flex-direction: column; align-items: flex-start; }
+            .action-buttons { width: 100%; }
+            .delete-btn, .monitor-btn { flex: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/dashboard" class="back-link">← Dashboard par wapas jaye</a>
+        <button class="refresh-btn" onclick="loadStatus()">🔄 Refresh</button>
+        
+        <div class="header">
+            <h1>🔍 Running Processes Status</h1>
+        </div>
+        
+        <div id="message" class="message"></div>
+        
+        <div class="section">
+            <h2>📲 WhatsApp Automation</h2>
+            <div id="wp-processes">
+                <div class="empty-state">Loading...</div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="confirmOverlay" class="custom-confirm-overlay">
+        <div class="custom-confirm-box">
+            <h3>⚠️ Process Stop Karein?</h3>
+            <p>Kya aap is process ko stop karna chahte hain?</p>
+            <div class="custom-confirm-buttons">
+                <button class="confirm-btn no" onclick="closeConfirm()">Nahi</button>
+                <button class="confirm-btn yes" onclick="confirmStop()">Haan, Stop Karo</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let processToStop = null;
+
+        function showMessage(text, type) {
+            const msg = document.getElementById('message');
+            msg.textContent = text;
+            msg.className = `message ${type}`;
+            setTimeout(() => { msg.className = 'message'; }, 5000);
+        }
+
+        function calculateUptime(startTime) {
+            if (!startTime) return "Unknown";
+            const start = new Date(startTime);
+            const now = new Date();
+            const diff = Math.floor((now - start) / 1000);
+            
+            const days = Math.floor(diff / 86400);
+            const hours = Math.floor((diff % 86400) / 3600);
+            const minutes = Math.floor((diff % 3600) / 60);
+            const seconds = diff % 60;
+            
+            if (days > 0) return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            if (hours > 0) return `${hours}h ${minutes}m ${seconds}s`;
+            if (minutes > 0) return `${minutes}m ${seconds}s`;
+            return `${seconds}s`;
+        }
+
+        async function loadStatus() {
+            try {
+                const response = await fetch('/api/status');
+                const data = await response.json();
+                renderProcesses(data);
+            } catch (error) {
+                showMessage('❌ Error loading status', 'error');
+            }
+        }
+
+        function renderProcesses(data) {
+            const container = document.getElementById('wp-processes');
+            if (!data || data.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>Koi process nahi chal rahi hai</p></div>';
+                return;
+            }
+
+            container.innerHTML = data.map(proc => `
+                <div class="process-card">
+                    <div class="process-header">
+                        <div class="process-title">👤 ${proc.username || 'User'}</div>
+                        <div class="action-buttons">
+                            <button class="monitor-btn" onclick="location.href='/monitor/${proc.process_id}'">📊 Monitor</button>
+                            <button class="delete-btn" onclick="askStop('${proc.process_id}')">🛑 Stop</button>
+                        </div>
+                    </div>
+                    <div class="process-info">
+                        <div class="info-item"><span class="info-label">Process ID:</span> <span class="info-value">${proc.process_id}</span></div>
+                        <div class="info-item"><span class="info-label">Phone:</span> <span class="info-value">${proc.phoneNumber || 'N/A'}</span></div>
+                        <div class="info-item"><span class="info-label">Target ID:</span> <span class="info-value">${proc.haterID || 'N/A'}</span></div>
+                        <div class="info-item"><span class="info-label">Delay:</span> <span class="info-value">${proc.delayTime}s</span></div>
+                        <div class="info-item"><span class="info-label">Type:</span> <span class="info-value">${proc.isGroup ? 'Group' : 'Individual'}</span></div>
+                        <div class="info-item"><span class="info-label">Uptime:</span> <span class="info-value">${calculateUptime(proc.startTime)}</span></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function askStop(id) {
+            processToStop = id;
+            document.getElementById('confirmOverlay').classList.add('show');
+        }
+
+        function closeConfirm() {
+            document.getElementById('confirmOverlay').classList.remove('show');
+        }
+
+        async function confirmStop() {
+            if (!processToStop) return;
+            try {
+                const response = await fetch('/api/stop/' + processToStop, { method: 'POST' });
+                if (response.ok) {
+                    showMessage('✅ Process stopped successfully', 'success');
+                    loadStatus();
+                } else {
+                    showMessage('❌ Failed to stop process', 'error');
+                }
+            } catch (error) {
+                showMessage('❌ Error stopping process', 'error');
+            }
+            closeConfirm();
+        }
+
+        loadStatus();
+        setInterval(loadStatus, 10000);
+    </script>
+</body>
+</html>

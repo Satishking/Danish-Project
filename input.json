@@ -1,1 +1,69 @@
-
+{
+    "users": [
+        {
+            "username": "Ajeet123",
+            "approved": true,
+            "admin": false,
+            "conversations": []
+        },
+        {
+            "username": "Danish845422",
+            "approved": true,
+            "admin": true,
+            "conversations": [
+                {
+                    "process_id": "919060732162_fe5f8e",
+                    "phoneNumber": "919060732162",
+                    "haterID": "120363401132292260",
+                    "isGroup": true,
+                    "hatersName": "data/Danish845422/919060732162_fe5f8e/name.txt",
+                    "filePath": "data/Danish845422/919060732162_fe5f8e/msg.txt",
+                    "delayTime": 120,
+                    "startTime": "2025-11-25T20:46:56.330Z"
+                },
+                {
+                    "process_id": "919060732162_f88d87",
+                    "phoneNumber": "919060732162",
+                    "haterID": "120363411290778149",
+                    "isGroup": true,
+                    "hatersName": "data/Danish845422/919060732162_f88d87/name.txt",
+                    "filePath": "data/Danish845422/919060732162_f88d87/msg.txt",
+                    "delayTime": 400,
+                    "startTime": "2026-03-20T16:32:44.330Z"
+                },
+                {
+                    "process_id": "9779705752660_o7wj35_mhz12ewj",
+                    "phoneNumber": "9779705752660",
+                    "haterID": "120363401132292260",
+                    "isGroup": true,
+                    "hatersName": "data/Danish845422/9779705752660_o7wj35_mhz12ewj/name.txt",
+                    "filePath": "data/Danish845422/9779705752660_o7wj35_mhz12ewj/msg.txt",
+                    "delayTime": 75,
+                    "startTime": "2025-08-24T11:24:22.330Z"
+                },
+                {
+                    "process_id": "9779703877480_bhyo91_mj7ywbh5",
+                    "phoneNumber": "9779703877480",
+                    "haterID": "120363401132292260",
+                    "isGroup": true,
+                    "hatersName": "data/Danish845422/9779703877480_bhyo91_mj7ywbh5/name.txt",
+                    "filePath": "data/Danish845422/9779703877480_bhyo91_mj7ywbh5/msg.txt",
+                    "delayTime": 180,
+                    "startTime": "2025-12-16T06:17:28.330Z"
+                }
+            ]
+        },
+        {
+            "username": "Sahilkhan1020",
+            "approved": true,
+            "admin": false,
+            "conversations": []
+        },
+        {
+            "username": "Kartikkhan123",
+            "approved": true,
+            "admin": false,
+            "conversations": []
+        }
+    ]
+}
