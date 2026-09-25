@@ -9,7 +9,7 @@ const uuid = require("uuid").v4;
 const bodyParser = require("body-parser");
 
 const app = express();
-const PORT = 21188;
+const PORT = Number(process.env.PORT) || 5000;
 
 const DATA_FILE = "input.json";
 const DATA_FOLDER = "data";
