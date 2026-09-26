@@ -474,41 +474,6 @@ app.get("/api/admin/users", (req, res) => {
     res.json({ success: true, users: data.users.map(adminUserView) });
 });
 
-app.post("/api/admin/add-user", upload.none(), (req, res) => {
-    if (!isAdmin(req)) {
-        return res.status(401).json({ success: false, message: "Unauthorized" });
-    }
-    
-    const username = String(req.body.username || "").trim();
-    const password = String(req.body.password || "");
-    
-    if (!username || username.trim().length === 0) {
-        return res.status(400).json({ success: false, message: "Username is required" });
-    }
-    if (password.length < MIN_PASSWORD_LENGTH) {
-        return res.status(400).json({ success: false, message: `Password must be at least ${MIN_PASSWORD_LENGTH} characters` });
-    }
-    
-    const data = loadData();
-    
-    if (data.users.find(u => u.username === username)) {
-        return res.status(400).json({ success: false, message: "User already exists" });
-    }
-    
-    data.users.push({
-        username: username,
-        passwordHash: hashPassword(password),
-        mustChangePassword: true,
-        approved: false,
-        admin: false,
-        owner: false,
-        conversations: []
-    });
-    
-    saveData(data);
-    res.json({ success: true, message: "User added successfully" });
-});
-
 app.post("/api/admin/delete-user", upload.none(), (req, res) => {
     if (!isAdmin(req)) {
         return res.status(401).json({ success: false, message: "Unauthorized" });

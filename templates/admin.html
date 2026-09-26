@@ -104,7 +104,7 @@
         /* Main Grid */
         .admin-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 32px;
             margin-bottom: 40px;
         }
@@ -479,23 +479,6 @@
         </div>
         
         <div class="admin-grid">
-            <!-- Add User Card -->
-            <div class="card">
-                <h2>➕ Add New User</h2>
-                <form id="addUserForm">
-                    <div class="form-group">
-                        <label for="username">Username</label>
-                        <input type="text" id="username" name="username" placeholder="e.g., john_doe" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="userPassword">Temporary Password</label>
-                        <input type="password" id="userPassword" name="password"
-                               placeholder="At least 8 characters" minlength="8" required>
-                    </div>
-                    <button type="submit" class="btn">Add User</button>
-                </form>
-            </div>
-            
             <!-- Users List Card -->
             <div class="card">
                 <h2>👥 All Users</h2>
@@ -557,33 +540,6 @@
                 </div>
             `).join('');
         }
-        
-        // Add user
-        document.getElementById('addUserForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('userPassword').value;
-            
-            try {
-                const response = await fetch('/api/admin/add-user', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password })
-                });
-                
-                const data = await response.json();
-                if (data.success) {
-                    document.getElementById('username').value = '';
-                    document.getElementById('userPassword').value = '';
-                    loadUsers();
-                    alert('User added successfully!');
-                } else {
-                    alert('Error: ' + data.message);
-                }
-            } catch (error) {
-                alert('Error adding user');
-            }
-        });
         
         // Delete user
         async function deleteUser(username) {
