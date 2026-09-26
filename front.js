@@ -307,7 +307,19 @@ const isAdmin = (req) => {
     if (!req.session.username) return false;
     const data = loadData();
     const user = data.users.find(u => u.username === req.session.username);
-    return user && user.admin;
+    return user && (user.admin || user.owner);
+};
+
+const getCurrentUser = (req, data = loadData()) => {
+    if (!req.session.username) return null;
+    return data.users.find(u => u.username === req.session.username) || null;
+};
+
+const canManageTarget = (req, target, data) => {
+    const actor = getCurrentUser(req, data);
+    if (!actor || (!actor.admin && !actor.owner)) return false;
+    // Keep the single owner account immutable so the project cannot be orphaned.
+    return target.owner !== true;
 };
 
 app.get("/api/admin/users", (req, res) => {
@@ -359,12 +371,17 @@ app.post("/api/admin/delete-user", upload.none(), (req, res) => {
     }
     
     const data = loadData();
-    const initialLength = data.users.length;
-    data.users = data.users.filter(u => u.username !== username);
-    
-    if (data.users.length === initialLength) {
+    const target = data.users.find(u => u.username === username);
+
+    if (!target) {
         return res.status(404).json({ success: false, message: "User not found" });
     }
+
+    if (!canManageTarget(req, target, data)) {
+        return res.status(403).json({ success: false, message: "Only the owner can manage the owner account" });
+    }
+
+    data.users = data.users.filter(u => u.username !== username);
     
     saveData(data);
     res.json({ success: true, message: "User deleted successfully" });
@@ -386,6 +403,10 @@ app.post("/api/admin/toggle-approval", upload.none(), (req, res) => {
     
     if (!user) {
         return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    if (!canManageTarget(req, user, data)) {
+        return res.status(403).json({ success: false, message: "Only the owner can manage the owner account" });
     }
     
     user.approved = !user.approved;
@@ -409,6 +430,10 @@ app.post("/api/admin/toggle-admin", upload.none(), (req, res) => {
     
     if (!user) {
         return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    if (!canManageTarget(req, user, data)) {
+        return res.status(403).json({ success: false, message: "Only the owner can manage the owner account" });
     }
     
     user.admin = !user.admin;

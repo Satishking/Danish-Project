@@ -268,10 +268,24 @@
             color: #333;
             font-weight: 700;
         }
+
+        .status-owner {
+            background: #6f42c1;
+            color: white;
+            font-weight: 700;
+        }
         
         .user-actions {
             display: flex;
             gap: 8px;
+            align-items: center;
+        }
+
+        .owner-note {
+            color: #6f42c1;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
         }
         
         .btn-small {
@@ -519,17 +533,20 @@
                             <span class="user-status ${user.approved ? 'status-approved' : 'status-pending'}">
                                 ${user.approved ? '✓ Approved' : '⊘ Pending'}
                             </span>
+                            ${user.owner ? '<span class="user-status status-owner">🔒 Owner</span>' : ''}
                             ${user.admin ? '<span class="user-status status-admin">👑 Admin</span>' : ''}
                         </div>
                     </div>
                     <div class="user-actions">
-                        <button class="btn-small btn-toggle" onclick="toggleApproval('${user.username}')">
-                            ${user.approved ? 'Disable' : 'Approve'}
-                        </button>
-                        <button class="btn-small btn-admin" onclick="toggleAdmin('${user.username}')">
-                            ${user.admin ? 'Remove Admin' : 'Make Admin'}
-                        </button>
-                        <button class="btn-small btn-delete" onclick="deleteUser('${user.username}')">Delete</button>
+                        ${user.owner ? '<span class="owner-note">Owner protected</span>' : `
+                            <button class="btn-small btn-toggle" onclick="toggleApproval('${user.username}')">
+                                ${user.approved ? 'Reject' : 'Approve'}
+                            </button>
+                            <button class="btn-small btn-admin" onclick="toggleAdmin('${user.username}')">
+                                ${user.admin ? 'Remove Admin' : 'Make Admin'}
+                            </button>
+                            <button class="btn-small btn-delete" onclick="deleteUser('${user.username}')">Delete</button>
+                        `}
                     </div>
                 </div>
             `).join('');

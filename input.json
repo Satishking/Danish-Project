@@ -10,6 +10,7 @@
             "username": "Danish845422",
             "approved": true,
             "admin": true,
+            "owner": true,
             "conversations": [
                 {
                     "process_id": "919060732162_fe5f8e",
