@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - WhatsApp Automation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0; min-height: 100vh; display: flex; justify-content: center;
+            align-items: center; padding: 20px; font-family: Inter, sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+        .card {
+            width: min(480px, 100%); overflow: hidden; background: #fff;
+            border-radius: 24px; box-shadow: 0 30px 80px rgba(0,0,0,.2);
+        }
+        .header {
+            padding: 38px 32px; color: #fff; text-align: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+        .logo { font-size: 46px; margin-bottom: 10px; }
+        h1 { margin: 0 0 8px; font-size: 28px; }
+        .header p { margin: 0; opacity: .9; }
+        .form-container { padding: 36px; }
+        .form-group { margin-bottom: 20px; }
+        label {
+            display: block; margin-bottom: 8px; color: #333; font-size: 13px;
+            font-weight: 700; text-transform: uppercase; letter-spacing: .4px;
+        }
+        input {
+            width: 100%; padding: 14px; border: 2px solid #e8e8e8;
+            border-radius: 10px; font: inherit; background: #fafafa;
+        }
+        input:focus {
+            outline: none; border-color: #667eea; background: #fff;
+            box-shadow: 0 0 0 4px rgba(102,126,234,.12);
+        }
+        button {
+            width: 100%; padding: 14px; border: 0; border-radius: 10px;
+            color: #fff; background: linear-gradient(135deg, #667eea, #764ba2);
+            font: 700 15px Inter, sans-serif; cursor: pointer;
+        }
+        .back { margin: 22px 0 0; text-align: center; font-size: 14px; }
+        a { color: #667eea; font-weight: 700; text-decoration: none; }
+        .hint { margin: 0 0 22px; color: #777; font-size: 13px; line-height: 1.5; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="header">
+            <div class="logo">📝</div>
+            <h1>Create Account</h1>
+            <p>Your account will be reviewed by an admin.</p>
+        </div>
+        <div class="form-container">
+            <p class="hint">Choose a username and a password with at least 8 characters.</p>
+            <form method="POST" action="/register">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input id="username" name="username" autocomplete="username" minlength="3" maxlength="32"
+                           pattern="[A-Za-z0-9_]+" placeholder="e.g. john_doe" required autofocus>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" autocomplete="new-password" minlength="8"
+                           placeholder="At least 8 characters" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" autocomplete="new-password"
+                           minlength="8" placeholder="Enter password again" required>
+                </div>
+                <button type="submit">Create Account</button>
+            </form>
+            <p class="back"><a href="/">← Back to login</a></p>
+        </div>
+    </div>
+</body>
+</html>

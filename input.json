@@ -4,7 +4,9 @@
             "username": "Ajeet123",
             "approved": true,
             "admin": false,
-            "conversations": []
+            "conversations": [],
+            "passwordHash": "2b8ea1bc829e74fbdd560f2ade1a26ba:837855c0108c629e97068451b70fc4aee245d415937378572526401e7e6b85018cd1152f223eeb0ec616c6e86d01348599dfdb6df97ee38a488ccde6985c95e1",
+            "mustChangePassword": true
         },
         {
             "username": "Danish845422",
@@ -52,19 +54,25 @@
                     "delayTime": 180,
                     "startTime": "2025-12-16T06:17:28.330Z"
                 }
-            ]
+            ],
+            "passwordHash": "f560d2e445f9276d02dab95094636704:aa2a4d89ac984879f63046dae9b1c5d4e7e87548bb2087ee234bf06402550c99df3e62c2669e1d4b07f4fd7a874988475297e292d43129406bb25676e72d22db",
+            "mustChangePassword": true
         },
         {
             "username": "Sahilkhan1020",
             "approved": true,
             "admin": false,
-            "conversations": []
+            "conversations": [],
+            "passwordHash": "1498bd0a3e9bd9bfe1a2e5e5f80746fd:e4d84d9ded90abce96cfaa270f7ba6171e39cf19ce417933be88320f8236f3b635847ed0d098676ccde8793d7f06f466e10fe75635ab7689bd15a5d2b2008e5b",
+            "mustChangePassword": true
         },
         {
             "username": "Kartikkhan123",
             "approved": true,
             "admin": false,
-            "conversations": []
+            "conversations": [],
+            "passwordHash": "92c61499b162478cb169dd83690f2038:0b2b7a06385c9d66e0b28612214ff7e2eb61613c940971d8b69207be49c1dd0362b3bfe8397c5a6e95d31d50bdd4b82612bbf6416386f4cb89b14eb26843018f",
+            "mustChangePassword": true
         }
     ]
 }

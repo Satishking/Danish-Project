@@ -466,7 +466,7 @@
             </a>
             <div class="nav-links">
                 <a href="/dashboard">Dashboard</a>
-                <a href="/" class="logout">Logout</a>
+                <a href="/logout" class="logout">Logout</a>
             </div>
         </div>
     </nav>
@@ -486,6 +486,11 @@
                     <div class="form-group">
                         <label for="username">Username</label>
                         <input type="text" id="username" name="username" placeholder="e.g., john_doe" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userPassword">Temporary Password</label>
+                        <input type="password" id="userPassword" name="password"
+                               placeholder="At least 8 characters" minlength="8" required>
                     </div>
                     <button type="submit" class="btn">Add User</button>
                 </form>
@@ -535,6 +540,7 @@
                             </span>
                             ${user.owner ? '<span class="user-status status-owner">🔒 Owner</span>' : ''}
                             ${user.admin ? '<span class="user-status status-admin">👑 Admin</span>' : ''}
+                            ${user.mustChangePassword ? '<span class="user-status status-pending">🔑 Change password</span>' : ''}
                         </div>
                     </div>
                     <div class="user-actions">
@@ -556,17 +562,19 @@
         document.getElementById('addUserForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const username = document.getElementById('username').value;
+            const password = document.getElementById('userPassword').value;
             
             try {
                 const response = await fetch('/api/admin/add-user', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username })
+                    body: JSON.stringify({ username, password })
                 });
                 
                 const data = await response.json();
                 if (data.success) {
                     document.getElementById('username').value = '';
+                    document.getElementById('userPassword').value = '';
                     loadUsers();
                     alert('User added successfully!');
                 } else {
